@@ -1,0 +1,91 @@
+.bashrc:
+if [ -f ~/.bash_aliases ]; then
+. ~/.bash_aliases
+fi
+
+#export PS1="\e[0;32m\W:\n$ "
+#export PS1="\[\033]0;$TITLEPREFIX:$PWD\007\]\n\[\033[32m\]\u@\h \[\033[35m\]$MSYSTEM -->\[\033[33m\]\W \[\033[0m\]\n$> "
+#export PS1=\[\033]0;$TITLEPREFIX:$PWD\007\]\n\[\033[32m\]\u@\h \[\033[35m\]$MSYSTEM \[\033[33m\]\w\[\033[36m\]`__git_ps1`\[\033[0m\]\n$
+
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path bash)"
+
+if [[ "$1" == "NXP7" ]] || [[ "$BLD" == "NXP7" ]] ; then
+  # export ARMGCC_DIR=/C/Program\ Files\ \(x86\)/GNU\ Arm\ Embedded\ Toolchain/10\ 2021.10
+  # PATH=/C/NXP/MinGW/bin:$PATH
+  # echo "GCC 10"
+  export ARMGCC_DIR=/C/Program\ Files\ \(x86\)/Arm\ GNU\ Toolchain\ arm-none-eabi/13.2\ Rel1
+  PATH=/C/NXP/MinGW/bin:/C/NXP/cmake-3.28/bin:$PATH
+  echo "NXP7xx build"
+  echo "GCC 13.2"
+elif [[ "$1" == "NXP5" ]] || [[ "$BLD" == "NXP5" ]] ; then
+  export ARMGCC_DIR=/C/Program\ Files\ \(x86\)/GNU\ Arm\ Embedded\ Toolchain/10\ 2021.10
+  PATH=/C/NXP/MinGW/bin:$PATH
+  echo "GCC 10"
+  # export ARMGCC_DIR=/C/Program\ Files\ \(x86\)/Arm\ GNU\ Toolchain\ arm-none-eabi/13.2\ Rel1
+  # PATH=/C/NXP/MinGW/bin:/C/NXP/cmake-3.28/bin:$PATH
+  # echo "GCC 13.2"
+  echo "NXP5xx build"
+elif [[ "$1" == "Ambiq10" ]] || [[ "$BLD" == "Ambiq10" ]] ; then
+  PATH=/C/Utils/ArmBuildTools/bin:/C/Program\ Files\ \(x86\)/GNU\ Arm\ Embedded\ Toolchain/10\ 2021.10/bin:$PATH
+  echo "Ambiq GCC 10 build"
+elif [[ "$1" == "Ambiq13" ]] || [[ "$BLD" == "Ambiq13" ]] ; then
+  PATH=/C/Utils/ArmBuildTools/bin:/C/Program\ Files\ \(x86\)/Arm\ GNU\ Toolchain\ arm-none-eabi/13.2\ Rel1/bin:$PATH
+  echo "Ambiq GCC 13.2 build"
+elif [[ "$1" == "Vega32r" ]] || [[ "$BLD" == "Vega32r" ]] ; then
+  export RISCV32GCC_DIR=/E/grmn/prj/Vega32/Toolchain/riscv32-unknown-elf-gcc
+  echo "Vega32 RISC-V build"
+elif [[ "$1" == "Vega32a" ]] || [[ "$BLD" == "Vega32a" ]] ; then
+  export ARMGCC_DIR=/C/Program\ Files\ \(x86\)/GNU\ Arm\ Embedded\ Toolchain/10\ 2021.10
+  echo "Vega32 ARM build"
+  PATH=/C/NXP/MinGW/bin:/C/NXP/cmake-3.28/bin:/E/grmn/prj/fit/Vega32/Toolchain/openocd/bin:/C/Program\ Files\ \(x86\)/GNU\ Arm\ Embedded\ Toolchain/10\ 2021.10/bin:$PATH
+else
+  echo " !!!! No build type specified !!!!"
+fi
+
+#alias
+#$PATH
+
+
+.bash_aliases
+alias gk='gitk --all&'
+alias gs='git status'
+alias gr='git rebase origin/master'
+alias grc='git rebase --continue'
+alias gm='git mergetool'
+alias gcpc='git cherry-pick --continue'
+alias gcpa='git cherry-pick --abort'
+alias gca='git commit --amend'
+alias nrf54='c:/ncs-lcs/nrfutil.exe toolchain-manager launch --terminal --chdir "c:/ncs-lcs/work-dir" --ncs-version v2.4.99-cs2'
+
+alias gsu='git submodule update --init --recursive'
+alias gssr='git submodule sync --recursive'
+
+alias cls='printf \\033\\143'
+alias ll='ls -alF'
+alias h='history'
+alias hg='history | grep'
+
+alias st='git rm -r --cached'
+
+alias vsc='code .'
+
+#alias pth="awk 'BEGIN{RS=":"}{printf "Path %d: %s\n",++i,$0}' <<<"$PATH""
+alias en='env | sort'
+
+
+A5 batch file:
+@echo off
+setlocal enableextensions
+if "%1" == "10" goto g10
+if "%1" == "13" goto g13
+@echo Invalid GCC version
+goto :fin
+:g10
+set BLD=Ambiq10
+goto :end
+:g13
+set BLD=Ambiq13
+goto :end
+:end
+"C:\Program Files\Git\bin\bash.exe" --login -i
+:fin
